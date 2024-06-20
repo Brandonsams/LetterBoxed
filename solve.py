@@ -1,6 +1,7 @@
 from tqdm import tqdm
 import nltk
-from wordfreq import word_frequency, zipf_frequency
+from wordfreq import zipf_frequency
+nltk.download('words', quiet=True)
 
 
 def no_double_letters(word):
@@ -10,19 +11,23 @@ def no_double_letters(word):
     return True
 
 
-nltk.download('words')
-nltk_words = map(lambda x: x.lower(), nltk.corpus.words.words())
-words = list(filter(no_double_letters, nltk_words))
+def is_lowercased(word):
+    return word[0].islower()
 
 
-# words = []
-# with open("words.txt") as f:
-#     for line in f.readlines():
-#         word = line.replace("\n", "")
-#         if not double_letters(word=word):
-#             words.append(word)
+def is_valid_letter_set(word):
+    return set(word).issubset(puzzle_set)
 
-puzzle = ["veo", "ims", "cap", "frn"]
+
+def is_somewhat_common_word(word):
+    return zipf_frequency(word=word, lang="en") > 0.0
+
+
+# puzzle = ["veo", "ims", "cap", "frn"]
+# puzzle = ["kih", "tym", "rzl", "bau"]
+# puzzle = ["mna", "leu", "pig", "xdw"]
+puzzle = ["bhr", "eav", "lct", "niu"]
+
 puzzle_str = "".join(puzzle)
 puzzle_set = set(puzzle_str)
 puzzle_dict = {}
@@ -31,29 +36,23 @@ for side in puzzle:
     for letter in side:
         puzzle_dict[letter] = i
 
-
-def is_valid_letter_set(word):
-    return set(word).issubset(puzzle_set)
-
-
-word_set = list(filter(is_valid_letter_set, words))
-
-
-def is_somewhat_common_word(word):
-    return zipf_frequency(word=word, lang="en") > 0.0
-
-
-word_set = list(filter(is_somewhat_common_word, word_set))
+nltk_words = map(lambda x: x, nltk.corpus.words.words())
+nltk_words_lower = filter(is_lowercased, nltk_words)
+words = filter(no_double_letters, nltk_words_lower)
+word_set_valid = filter(is_valid_letter_set, words)
+word_set = list(filter(is_somewhat_common_word, word_set_valid))
 
 possible_solutions = []
 for a in tqdm(word_set):
+    a_len = len(a)
     for b in word_set:
+        if a_len + len(b) <= 12:
+            continue
         if a[-1] != b[0]:
             continue
         if set(a + b) == puzzle_set:
             possible_solutions.append([a, b])
 
-# possible_solutions = [["voices","semiprofane"]]
 good_solutions = []
 for possible_solution in possible_solutions:
     is_good_solution = True
@@ -71,7 +70,7 @@ for possible_solution in possible_solutions:
         good_solutions.append(possible_solution)
 
 good_solutions.sort(key=lambda s: zipf_frequency(
-    s[0], "en") + zipf_frequency(s[1], "en"))
+    s[0], "en") + zipf_frequency(s[1], "en"), reverse=True)
 
 for good_solution in good_solutions:
     print(good_solution, zipf_frequency(
