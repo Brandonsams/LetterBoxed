@@ -35,10 +35,13 @@ for side in puzzle:
 def is_valid_letter_set(word):
     return set(word).issubset(puzzle_set)
 
+
 word_set = list(filter(is_valid_letter_set, words))
 
+
 def is_somewhat_common_word(word):
-    return zipf_frequency(word=word,lang="en") > 0.0
+    return zipf_frequency(word=word, lang="en") > 0.0
+
 
 word_set = list(filter(is_somewhat_common_word, word_set))
 
@@ -65,11 +68,10 @@ for possible_solution in possible_solutions:
         if not is_good_solution:
             break
     if is_good_solution:
-        # print(possible_solution)
         good_solutions.append(possible_solution)
 
 good_solutions.sort(key=lambda s: zipf_frequency(
-    possible_solution[0], "en") + zipf_frequency(possible_solution[1], "en"))
+    s[0], "en") + zipf_frequency(s[1], "en"))
 
 for good_solution in good_solutions:
     print(good_solution, zipf_frequency(
