@@ -1,6 +1,7 @@
 certifi==2024.6.2
 charset-normalizer==3.3.2
 click==8.1.7
+english-words==2.0.1
 ftfy==6.2.0
 idna==3.7
 joblib==1.4.2
