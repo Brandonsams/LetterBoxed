@@ -1,7 +1,12 @@
 from tqdm import tqdm
 import nltk
 from wordfreq import zipf_frequency
+from english_words import get_english_words_set
 nltk.download('words', quiet=True)
+nltk.download('wordnet', quiet=True)
+nltk.download('brown', quiet=True)
+nltk.download('treebank', quiet=True)
+# nltk.download()
 
 
 def no_double_letters(word):
@@ -26,7 +31,9 @@ def is_somewhat_common_word(word):
 # puzzle = ["veo", "ims", "cap", "frn"]
 # puzzle = ["kih", "tym", "rzl", "bau"]
 # puzzle = ["mna", "leu", "pig", "xdw"]
-puzzle = ["bhr", "eav", "lct", "niu"]
+# puzzle = ["bhr", "eav", "lct", "niu"]
+# puzzle = ["ohp", "cdr", "tnu", "aij"]
+puzzle = ["hif", "mel", "but", "ard"]
 
 puzzle_str = "".join(puzzle)
 puzzle_set = set(puzzle_str)
@@ -36,11 +43,19 @@ for side in puzzle:
     for letter in side:
         puzzle_dict[letter] = i
 
-nltk_words = map(lambda x: x, nltk.corpus.words.words())
+# web2lowerset = get_english_words_set(['web2'])
+
+# nltk_words = map(lambda x: x, nltk.corpus.wordnet.words())
+nltk_words = set(nltk.corpus.words.words()).union(
+    nltk.corpus.wordnet.words(), 
+    nltk.corpus.brown.words(),
+    nltk.corpus.treebank.words(),
+    get_english_words_set(['web2'])
+)
 nltk_words_lower = filter(is_lowercased, nltk_words)
 words = filter(no_double_letters, nltk_words_lower)
 word_set_valid = filter(is_valid_letter_set, words)
-word_set = list(filter(is_somewhat_common_word, word_set_valid))
+word_set = set(filter(is_somewhat_common_word, word_set_valid))
 
 possible_solutions = []
 for a in tqdm(word_set):
@@ -54,7 +69,7 @@ for a in tqdm(word_set):
             possible_solutions.append([a, b])
 
 good_solutions = []
-for possible_solution in possible_solutions:
+for possible_solution in tqdm(possible_solutions):
     is_good_solution = True
     for word in possible_solution:
         prev_side_index = -1
