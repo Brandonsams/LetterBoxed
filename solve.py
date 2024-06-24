@@ -34,7 +34,8 @@ def is_somewhat_common_word(word):
 # puzzle = ["bhr", "eav", "lct", "niu"]
 # puzzle = ["ohp", "cdr", "tnu", "aij"]
 # puzzle = ["hif", "mel", "but", "ard"]
-puzzle = ["yhi", "ucs", "qtl", "daf"]
+# puzzle = ["yhi", "ucs", "qtl", "daf"]
+puzzle = ["nlb", "kge", "uro", "wca"]
 
 
 puzzle_str = "".join(puzzle)
