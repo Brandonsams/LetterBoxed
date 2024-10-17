@@ -35,8 +35,21 @@ def is_somewhat_common_word(word):
 # puzzle = ["ohp", "cdr", "tnu", "aij"]
 # puzzle = ["hif", "mel", "but", "ard"]
 # puzzle = ["yhi", "ucs", "qtl", "daf"]
-puzzle = ["nlb", "kge", "uro", "wca"]
-
+# puzzle = ["nlb", "kge", "uro", "wca"]
+# puzzle = ["bsa", "zru", "eit", "gko"]
+# puzzle = ["osv", "ier", "lhw", "ynt"]
+# puzzle = ["jxz", "uel", "oin", "rca"]
+# puzzle = ["inc", "lwt", "ous", "par"]
+# puzzle = ["lin", "ade", "htb", "ucr"]
+# puzzle = ["iel", "cgn", "vra", "tyo"]
+# puzzle = ["enr", "tbl", "aoi", "pxs"]
+# puzzle = ["uta", "mln", "cwi", "ozr"]
+# puzzle = ["ced", "inr", "hva", "ktu"]
+# puzzle = ["tay", "nsm", "pxo", "jke"]
+# puzzle = ["fhi", "wrt", "nko", "gls"]
+# puzzle = ["tzn", "lea", "roh", "ypb"]
+# puzzle = ["ubl", "set", "xma", "ior"]
+puzzle = ["tap", "eio", "lmv", "xnu"]
 
 puzzle_str = "".join(puzzle)
 puzzle_set = set(puzzle_str)
@@ -50,7 +63,7 @@ for side in puzzle:
 
 # nltk_words = map(lambda x: x, nltk.corpus.wordnet.words())
 nltk_words = set(nltk.corpus.words.words()).union(
-    nltk.corpus.wordnet.words(), 
+    nltk.corpus.wordnet.words(),
     nltk.corpus.brown.words(),
     nltk.corpus.treebank.words(),
     get_english_words_set(['web2'])
@@ -64,9 +77,9 @@ possible_solutions = []
 for a in tqdm(word_set):
     a_len = len(a)
     for b in word_set:
-        if a_len + len(b) <= 12:
-            continue
         if a[-1] != b[0]:
+            continue
+        if a_len + len(b) <= 12:
             continue
         if set(a + b) == puzzle_set:
             possible_solutions.append([a, b])
@@ -88,11 +101,10 @@ for possible_solution in tqdm(possible_solutions):
         good_solutions.append(possible_solution)
 
 good_solutions.sort(key=lambda s: zipf_frequency(
-    s[0], "en") + zipf_frequency(s[1], "en"), reverse=True)
+    s[0], "en") + zipf_frequency(s[1], "en"), reverse=False)
 
 for good_solution in good_solutions:
     print(good_solution, zipf_frequency(
         good_solution[0], "en") + zipf_frequency(
         good_solution[1], "en"))
-
 print(f"{len(good_solutions)} solutions found!")
